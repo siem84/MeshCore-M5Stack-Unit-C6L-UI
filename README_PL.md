@@ -142,6 +142,23 @@ NF to istniejąca wartość Noise Floor MeshCore, bez korekcji dla LNA i bez now
 
 Widoczna strona odświeża się co około 750 ms. Duże liczniki RX korzystają w razie potrzeby z czytelnych skrótów k/M. Ekran nie uruchamia skanowania kanału i nie zmienia trybu odbioru radia. Noise Floor jest telemetrią diagnostyczną, a nie laboratoryjnym pomiarem czułości odbiornika.
 
+## Galeria OLED UI
+
+| LOGO | STATUS | RADIO |
+| --- | --- | --- |
+| ![LOGO](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/001%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![STATUS](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/002%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![RADIO](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/003%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
+| Logo startowe i identyfikacja C6L UI. | Stan BLE, cz?stotliwo?? LoRa i liczniki RX/TX. | Parametry radia LoRa. |
+
+| SIGNAL | RF MON | DEVICE |
+| --- | --- | --- |
+| ![SIGNAL](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/004%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![RF MON](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/005%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![DEVICE](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/006%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
+| RSSI i SNR ostatniego pakietu oraz licznik RX. | Noise Floor, RSSI, SNR i licznik RX. | Identyfikacja urz?dzenia, uptime i stan BLE. |
+
+| CLOCK | TIMEZONE UTC | TIMEZONE EUROPE |
+| --- | --- | --- |
+| ![CLOCK](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/007%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![TIMEZONE UTC](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/008%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![TIMEZONE EUROPE](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/009%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
+| Lokalna godzina i data. | Profil strefy czasowej UTC. | Profil EUROPE z automatyczn? zmian? czasu. |
+
 ## Instalacja
 
 Używaj wyłącznie obrazów dla **M5Stack Unit C6L**. Dwa pliki mają różne przeznaczenie.
