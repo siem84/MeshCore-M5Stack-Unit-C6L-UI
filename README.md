@@ -4,19 +4,24 @@ English | [Polski](README_PL.md)
 
 MeshCore C6L UI is a community/unofficial adaptation of MeshCore Companion for **M5Stack Unit C6L**. It brings up and integrates the built-in OLED, RGB LED, user button and local UI, BLE pairing display, clock with selectable timezone, RF Monitor, and board-specific RF initialization.
 
-This package contains the ten C6L adaptation source files, preserving their paths relative to MeshCore, and two firmware images in `firmware/`. It is a source overlay for the base revision below, not a complete standalone MeshCore source tree.
+## OLED UI gallery
 
-## Base version
+| LOGO | STATUS | RADIO |
+| --- | --- | --- |
+| ![LOGO](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/001%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![STATUS](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/002%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![RADIO](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/003%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
+| Startup logo and C6L UI identification. | BLE state, LoRa frequency and RX/TX counters. | LoRa radio parameters. |
 
-| Component | Version |
-| --- | --- |
-| MeshCore Companion | v1.17.1 |
-| Base development commit | `ac7d88ef` |
-| C6L UI | v1.0.0 |
+| SIGNAL | RF MON | DEVICE |
+| --- | --- | --- |
+| ![SIGNAL](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/004%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![RF MON](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/005%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![DEVICE](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/006%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
+| Last packet RSSI, SNR and RX count. | Noise Floor, RSSI, SNR and RX count. | Device identification, uptime and BLE state. |
 
-The base is development code **after** the `companion-v1.17.1` tag, at commit `ac7d88efe72201729cc8584c2b85e1f45350d0ec` (`companion-v1.17.1-66-gac7d88ef`). This is why firmware filenames include `v1.17.1-dev-ac7d88ef`; they do not denote the unmodified official v1.17.1 release.
+| CLOCK | TIMEZONE UTC | TIMEZONE EUROPE |
+| --- | --- | --- |
+| ![CLOCK](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/007%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![TIMEZONE UTC](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/008%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![TIMEZONE EUROPE](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/009%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
+| Local time and date. | UTC timezone profile. | EUROPE timezone profile with automatic DST. |
 
-## Features / Changes
+## v1.0.0 — Initial C6L UI release
 
 - **OLED 64×48:** support for the built-in SSD1306, with shared SPI operation alongside the SX1262 and a complete local device interface.
 - **RGB LED:** support for the built-in WS2812C on GPIO2, indicating startup, BLE connection state and LoRa activity.
@@ -26,6 +31,32 @@ The base is development code **after** the `companion-v1.17.1` tag, at commit `a
 - **OLED auto-off:** information pages turn off after inactivity; MeshCore continues operating.
 - **RF Monitor:** MeshCore Noise Floor, last packet RSSI and SNR, and received-packet count, without an additional radio measurement.
 - **Startup buzzer:** audible startup indication.
+
+Seven normal pages: LOGO / STATUS / RADIO / SIGNAL / RF MON / DEVICE / CLOCK.
+
+C6L-specific RF initialization is part of v1.0.0; details below.
+
+[Release v1.0.0](https://github.com/siem84/MeshCore-M5Stack-Unit-C6L-UI/releases/tag/v1.0.0)
+
+## v1.0.1 — Preferences / SPIFFS fix
+
+v1.0.1 includes all v1.0.0 features and changes only preferences persistence / SPIFFS handling. The UI appearance is unchanged.
+
+Preferences could fail to save when SPIFFS ran out of space. The previous C6L layout had 128 KiB SPIFFS; v1.0.1 increases it to **256 KiB**, retaining two OTA slots, with `variants/m5stack_unit_c6l/partitions_4mb_256k_spiffs.csv`. Settings such as Path Hash Size now persist across restart/cold boot in physical C6L testing. Failed prefs saves are reported and do not clear dirty state.
+
+Contacts, channels and device identity are not deliberately deleted or limited by the running firmware to recover space. Storage protection may reclaim raw advert cache; affected adverts need to be received again before export/sharing.
+
+**The first upgrade from v1.0.0 requires CLEAN INSTALL with `-merged.bin` because the partition layout changed. CLEAN INSTALL erases device data, including identity, contacts, channels, preferences and BLE bonding. Back up needed data first.** After migration, later updates may use UPDATE `.bin` unless the partition layout changes again.
+
+This is **C6L UI v1.0.1**, not a new MeshCore version. Both final CLEAN INSTALL and UPDATE images and the persistence fix have been tested on physical M5Stack Unit C6L.
+
+[Release v1.0.1](https://github.com/siem84/MeshCore-M5Stack-Unit-C6L-UI/releases/tag/v1.0.1)
+
+## Technical documentation
+
+MeshCore Companion v1.17.1; base development commit `ac7d88efe72201729cc8584c2b85e1f45350d0ec`; public filename base: `v1.17.1-dev-ac7d88ef`.
+
+This repository is a C6L source overlay for that base commit, not a complete standalone MeshCore tree. Copy the provided source files into the matching base tree, preserving paths.
 
 ### RF / LoRa initialization
 
@@ -53,7 +84,7 @@ This supplies the RF control states required for correct LoRa receive-path opera
 
 RX/TX indications temporarily override the BLE color. The startup indication is not a full hardware self-test.
 
-## OLED UI and controls
+### OLED UI and controls
 
 There are exactly **seven normal pages**:
 
@@ -142,39 +173,34 @@ NF is the existing MeshCore Noise Floor value, without correction for the LNA or
 
 The page refreshes approximately every 750 ms while visible. Large RX counts use readable k/M abbreviations if needed. This display does not initiate a channel scan or change the radio's receive mode. Noise Floor is diagnostic telemetry, not a laboratory measurement of receiver sensitivity.
 
-## OLED UI gallery
+### Supported hardware
 
-| LOGO | STATUS | RADIO |
-| --- | --- | --- |
-| ![LOGO](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/001%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![STATUS](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/002%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![RADIO](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/003%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
-| Startup logo and C6L UI identification. | BLE state, LoRa frequency and RX/TX counters. | LoRa radio parameters. |
+**M5Stack Unit C6L only:**
 
-| SIGNAL | RF MON | DEVICE |
-| --- | --- | --- |
-| ![SIGNAL](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/004%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![RF MON](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/005%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![DEVICE](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/006%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
-| Last packet RSSI, SNR and RX count. | Noise Floor, RSSI, SNR and RX count. | Device identification, uptime and BLE state. |
-
-| CLOCK | TIMEZONE UTC | TIMEZONE EUROPE |
-| --- | --- | --- |
-| ![CLOCK](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/007%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![TIMEZONE UTC](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/008%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) | ![TIMEZONE EUROPE](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/009%20MeshCore%20M5Stack%20Unit%20C6L%20UI.jpg) |
-| Local time and date. | UTC timezone profile. | EUROPE timezone profile with automatic DST. |
+- ESP32-C6 + SX1262
+- SSD1306 OLED, 64×48
+- WS2812C RGB LED
+- SYS_KEY1 user button
+- PI4IOE5V6408 I/O expander
 
 ## Installation
+
+**Migration from v1.0.0 / 128 KiB SPIFFS requires a full flash erase and CLEAN INSTALL. UPDATE does not change the partition table. CLEAN INSTALL deletes device data; back up needed data first.**
 
 Use only images for **M5Stack Unit C6L**. The two files serve different purposes.
 
 ### UPDATE
 
-For an existing installation with the correct MeshCore flash layout. Select the ordinary, non-merged file:
+For an existing installation already using the v1.0.1 256 KiB SPIFFS layout. Select the ordinary, non-merged file:
 
 ```text
-MeshCore-v1.17.1-dev-ac7d88ef-M5Stack-Unit-C6L-UI-v1.0.0.bin
+MeshCore-v1.17.1-dev-ac7d88ef-M5Stack-Unit-C6L-UI-v1.0.1.bin
 ```
 
-Size: **1,534,576 bytes**. SHA-256:
+Size: **1,537,552 bytes**. SHA-256:
 
 ```text
-08E910E777B7F3B521F7576951C84603F35E7EBD8A501D7F9FDF28357F6F33ED
+518B72285AB2A864642D60E4176ACF5DE241FDBCDE6CBE3751C1E12C9F0DD559
 ```
 
 Do not select full erase for a normal update intended to retain device data.
@@ -184,13 +210,13 @@ Do not select full erase for a normal update intended to retain device data.
 For a full installation, including an erased device or a device with a different flash layout:
 
 ```text
-MeshCore-v1.17.1-dev-ac7d88ef-M5Stack-Unit-C6L-UI-v1.0.0-merged.bin
+MeshCore-v1.17.1-dev-ac7d88ef-M5Stack-Unit-C6L-UI-v1.0.1-merged.bin
 ```
 
-Size: **1,600,112 bytes**. SHA-256:
+Size: **1,603,088 bytes**. SHA-256:
 
 ```text
-7EC5F690CF4E0A1E7E4E951282BA4ACC620E92BA272DA68C7D50D8C9366B58CD
+7AC529DBE5D66ED085D03606DE72FA0AF647CAD5F6A24E1C9EB294D20884EF7D
 ```
 
 The merged image includes the bootloader, partition table, initial OTA data and application.
@@ -208,19 +234,9 @@ The merged image includes the bootloader, partition table, initial OTA data and 
 
 The merged-file detection and erase behavior are implemented in the [Web Flasher source](https://github.com/meshcore-dev/flasher.meshcore.io/blob/main/flasher.js). When changing between installation types, reload the flasher and reselect the file so that a previous erase choice is not carried over.
 
-## Supported hardware
+## Testing
 
-**M5Stack Unit C6L only:**
-
-- ESP32-C6 + SX1262
-- SSD1306 OLED, 64×48
-- WS2812C RGB LED
-- SYS_KEY1 user button
-- PI4IOE5V6408 I/O expander
-
-## Status / Testing
-
-C6L UI v1.0.0 and both final publication firmware images (UPDATE and CLEAN INSTALL), with the exact SHA-256 hashes listed in Installation, have been tested on a physical M5Stack Unit C6L.
+C6L UI v1.0.0 and both final publication firmware images (UPDATE and CLEAN INSTALL), with the exact SHA-256 hashes retained in Release v1.0.0, have been tested on a physical M5Stack Unit C6L.
 
 The following basic functions were checked:
 
@@ -239,6 +255,8 @@ The following basic functions were checked:
 - CLEAN INSTALL using `-merged.bin`.
 
 This is the first public release of C6L UI v1.0.0, and unknown issues may remain. Issue reports are welcome; include the hardware, firmware filename and steps to reproduce the problem.
+
+C6L UI v1.0.1: preferences persistence across restart/cold boot and both final UPDATE and CLEAN INSTALL images have been physically tested on M5Stack Unit C6L.
 
 ## Credits
 

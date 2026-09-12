@@ -651,12 +651,13 @@ void loop() {
           c6l_timezone_mode = true;
         } else {
           NodePrefs* prefs = the_mesh.getNodePrefs();
-          if (c6l_timezone_choice == prefs->c6l_timezone) {
+          if (c6l_timezone_choice == prefs->c6l_timezone && !c6l_timezone_error) {
             c6l_timezone_mode = false;
           } else if (c6l_applyTimezone(c6l_timezone_choice)) {
             prefs->c6l_timezone = c6l_timezone_choice;
-            the_mesh.savePrefs();  // Existing MeshCore persistence, once on confirmation.
-            c6l_timezone_mode = false;
+            const bool saved = the_mesh.savePrefs();
+            c6l_timezone_error = !saved;
+            c6l_timezone_mode = !saved;
           } else {
             c6l_timezone_error = true;
           }
@@ -697,6 +698,8 @@ void loop() {
     updateC6LOledStatus();
     c6l_oled_last_update = now;
   }
+
+
 #endif
 #ifdef DISPLAY_CLASS
   ui_task.loop();
