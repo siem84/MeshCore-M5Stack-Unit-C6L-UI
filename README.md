@@ -2,6 +2,8 @@ English | [Polski](README_PL.md)
 
 # MeshCore C6L UI
 
+![MeshCore M5Stack Unit C6L UI](Image%20-%20MeshCore%20M5Stack%20Unit%20C6L%20UI/MeshCore_Unit_C6L_UI_banner_by_siem84.png)
+
 MeshCore C6L UI is a community/unofficial adaptation of MeshCore Companion for **M5Stack Unit C6L**. It brings up and integrates the built-in OLED, RGB LED, user button and local UI, BLE pairing display, clock with selectable timezone, RF Monitor, and board-specific RF initialization.
 
 ## OLED UI gallery
